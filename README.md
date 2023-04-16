@@ -9,12 +9,12 @@ _Source foledr conatins main.c_
 ### - Drivers
 _Folder contains MCU and perpheral related driver files_
 
-#### MCU Drivers : inc/stm32f446re.h
+> MCU Drivers : inc/stm32f446re.h
 
-#### Other Drivers:
- - GPIO
- - SPI
- - I2C
+> Other Drivers:
+ >- GPIO
+ >- SPI
+ >- I2C
 
 ### - Tasks
 _Folder contains sample codes to test driver files_
