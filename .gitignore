@@ -1,0 +1,16 @@
+.cproject
+
+.project
+.settings/
+.vs/
+.vscode/
+F446RE-Drivers.launch
+STM32F446RETX_FLASH.ld
+STM32F446RETX_RAM.ld
+Startup/
+build/
+cmake/
+vcpkg-configuration.json
+CMakePresets.json
+Debug/
+CMakeLists.txt
