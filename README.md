@@ -5,18 +5,18 @@ The STM32F446RE is a microcontroller from STMicroelectronics that is based on th
 
 - Core: ARM Cortex-M4F at 180 MHz
 - Memory:
-    512 KB Flash memory
-    128 KB SRAM
-    4 KB backup SRAM
+    >512 KB Flash memory
+    >128 KB SRAM
+    >4 KB backup SRAM
 - Connectivity:
-    USB 2.0 full speed
-    I2C, USART, SPI, CAN, and SDIO interfaces
+    >USB 2.0 full speed
+    >I2C, USART, SPI, CAN, and SDIO interfaces
 - ADC:
     12-bit ADC with up to 20 channels
 - Timers:
-    2 general-purpose timers
-    4 advanced-control timers
-    2 basic timers
+    >2 general-purpose timers
+    >4 advanced-control timers
+    >2 basic timers
 - Operating voltage range: 1.7V to 3.6V
 - Operating temperature range: -40°C to 85°C
 - Package: LQFP64 (10mm x 10mm)
