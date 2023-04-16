@@ -15,6 +15,7 @@ _Folder contains MCU and perpheral related driver files_
  >- GPIO
  >- SPI
  >- I2C
+ >- UART/USART
 
 ### - Tasks
 _Folder contains sample codes to test driver files_
