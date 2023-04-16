@@ -3,10 +3,10 @@ STM32F446RE Drivers and Sample Codes
 
 ## Folder Structure
 
-### Src
+### - Src
 Source foledr conatins main.c
 
-### Drivers
+### - Drivers
 Folder contains MCU and perpheral related driver files
 - MCU Drivers : inc/stm32f446re.h
 
@@ -15,10 +15,10 @@ Folder contains MCU and perpheral related driver files
  - SPI
  - I2C
 
-### Tasks
+### - Tasks
 Folder contains sample codes to test driver files
 
-### Appconfig
+### - Appconfig
 Folder contains application configuration macros
 - Enable specific macros (uncomment) here to execute them.
 - main.c will execute those macro related application task.
