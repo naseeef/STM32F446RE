@@ -109,7 +109,8 @@ void GPIO_WritePort(Gpio_Reg_t *pGPIOx, uint16_t value);
 void GPIO_ToggleOutputPin(Gpio_Reg_t *pGPIOx, uint8_t pinNumber);
 
 //APIs for GPIO interrupts
-void GPIO_IRQConfig(uint8_t IRQNumber, uint8_t IRQPriority, uint8_t ENorDI);
+void GPIO_IRQInterruptConfig(uint8_t IRQNumber, uint8_t ENorDI);
+void GPIO_IRQPriorityConfig(uint8_t IRQNumber, uint8_t IRQPriority);
 void GPIO_IRQHandler(uint8_t pinNumber);
 
 

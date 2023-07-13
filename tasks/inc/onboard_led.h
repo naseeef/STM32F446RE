@@ -19,6 +19,9 @@ void BlinkOnBoardLed(void);
 void delay(uint16_t duration_ms);
 void BlinkOBLedWithButton(void);
 void GpioInitOnBoardBtn(void);
+void InterruptToggleLED(void);
+void GpioInitOnBoardBtnInt(void);
+
 
 
 #endif /* ONBOARD_LED_H_ */

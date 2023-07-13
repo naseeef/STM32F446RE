@@ -12,6 +12,7 @@
 
 #define __vo 				volatile
 
+
 //General Macros
 #define ENABLE				1
 #define DISABLE				0
@@ -20,6 +21,33 @@
 #define GPIO_PIN_SET		SET
 #define GPIO_PIN_RESET		RESET
 
+
+/*********************************Processor Specific Details*********************************/
+
+/*
+ * ARM Cortex Mx NVIC ISERx Register Addresses
+ */
+#define NVIC_ISER0			((__vo uint32_t*) 0xE000E100)
+#define NVIC_ISER1			((__vo uint32_t*) 0xE000E104)
+#define NVIC_ISER2			((__vo uint32_t*) 0xE000E108)
+#define NVIC_ISER3			((__vo uint32_t*) 0xE000E10C)
+
+/*
+ * ARM Cortex Mx NVIC ICERx Register Addresses
+ */
+#define NVIC_ICER0			((__vo uint32_t*) 0xE000E180)
+#define NVIC_ICER1			((__vo uint32_t*) 0xE000E184)
+#define NVIC_ICER2			((__vo uint32_t*) 0xE000E188)
+#define NVIC_ICER3			((__vo uint32_t*) 0xE000E18C)
+
+/*
+ * ARM Cortex Mx Priority Register Address
+ */
+#define NVIC_PR_BASE_ADDR	((__vo uint32_t*) 0xE000E400)
+
+#define NO_PR_BITSIMPLENETED	4 /* Only in STMicroelectronics case*/
+
+/********************************************************************************************/
 
 /*System Memory*/
 #define FLASH_BASEADDR		0x08000000U
@@ -92,6 +120,24 @@ typedef struct
 #define GPIOG				((Gpio_Reg_t*) GPIOG_BASEADDR)
 #define GPIOH				((Gpio_Reg_t*) GPIOH_BASEADDR)
 
+/*SPI Registers*/
+typedef struct
+{
+	__vo uint32_t CR1;
+	__vo uint32_t CR2;
+	__vo uint32_t SR;
+	__vo uint32_t DR;
+	__vo uint32_t CRCPR;
+	__vo uint32_t RXCRCR;
+	__vo uint32_t TXCRCR;
+	__vo uint32_t I2SCFGR;
+	__vo uint32_t I2SPR;
+}Spi_Reg_t;
+
+#define SPI1				((Spi_Reg_t*) SPI1_BASEADDR)
+#define SPI2				((Spi_Reg_t*) SPI2_BASEADDR)
+#define SPI3				((Spi_Reg_t*) SPI3_BASEADDR)
+#define SPI4				((Spi_Reg_t*) SPI4_BASEADDR)
 /*RCC Registers - Reference Manual: Page Number. 172/1347 */
 typedef struct
 {
@@ -272,6 +318,14 @@ typedef struct
 										(x == GPIOF) ? 5 : \
 										(x == GPIOG) ? 6 : \
 										(x == GPIOH) ? 7 : 0	) 
+
+#define IRQ_NO_EXTI0		6
+#define IRQ_NO_EXTI1		7
+#define IRQ_NO_EXTI2		8
+#define IRQ_NO_EXTI3		9
+#define IRQ_NO_EXTI4		10
+#define IRQ_NO_EXTI9_5		23
+#define IRQ_NO_EXTI15_10	40
 
 
 #endif /* INC_STM32F446RE_H_ */

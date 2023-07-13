@@ -12,12 +12,16 @@
  ***Enable On-Board LED.
  *LED will blink in every one second
  */
-//#define ENABLE_ONBOARD_LED		1
+#define ENABLE_ONBOARD_LED		1
 
 /*
  * Enable On-Board LED with On-Board Button
  */
-#define ONBOARD_LED_BUTTON		1
+//#define ONBOARD_LED_BUTTON		1
 
+/*
+ * Toggle On-Board LED with On-Board Button using Interrupt
+ */
+//#define INTERRUPT_LED_BUTTON		1
 
 #endif /* APPCONFIG_H_ */

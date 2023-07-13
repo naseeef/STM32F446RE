@@ -6,6 +6,7 @@
  */
 
 #include <stdint.h>
+#include <string.h>
 #include <stm32f446re.h>
 #include <stm32f446re_gpio_driver.h>
 #include "onboard_led.h"
@@ -29,6 +30,7 @@ void delay(uint16_t duration_ms)
 void GpioInitOnBoardLed(void)
 {
 	Gpio_Handle_t onBoardLed;
+	memset(&onBoardLed,0,sizeof(onBoardLed));
 
 	onBoardLed.pGPIOx = GPIOA;
 
@@ -43,17 +45,35 @@ void GpioInitOnBoardLed(void)
 void GpioInitOnBoardBtn(void)
 {
 	Gpio_Handle_t onBoardBtn;
+	memset(&onBoardBtn,0,sizeof(onBoardBtn));
 
 	onBoardBtn.pGPIOx = GPIOC;
 
 	onBoardBtn.Gpio_PinConfig.GPIO_PinNumber 	= GPIO_PIN_13;
-	onBoardBtn.Gpio_PinConfig.GPIO_PinMode 	= GPIO_MODE_IN;
+	onBoardBtn.Gpio_PinConfig.GPIO_PinMode 		= GPIO_MODE_IN;
 	onBoardBtn.Gpio_PinConfig.GPIO_PinSpeed 	= GPIO_SPEED_FAST;
 	onBoardBtn.Gpio_PinConfig.GPIO_OPType 		= GPIO_OP_PP;
-	onBoardBtn.Gpio_PinConfig.GPIO_PuPdControl = GPIO_NO_PUPD;
+	onBoardBtn.Gpio_PinConfig.GPIO_PuPdControl 	= GPIO_NO_PUPD;
 
 	GPIO_Init(&onBoardBtn);
 }
+
+void GpioInitOnBoardBtnInt(void)
+{
+	Gpio_Handle_t onBoardBtnInt;
+	memset(&onBoardBtnInt,0,sizeof(onBoardBtnInt));
+
+	onBoardBtnInt.pGPIOx = GPIOC;
+
+	onBoardBtnInt.Gpio_PinConfig.GPIO_PinNumber 	= GPIO_PIN_13;
+	onBoardBtnInt.Gpio_PinConfig.GPIO_PinMode 		= GPIO_MODE_INT_FT;
+	onBoardBtnInt.Gpio_PinConfig.GPIO_PinSpeed 		= GPIO_SPEED_FAST;
+	onBoardBtnInt.Gpio_PinConfig.GPIO_PuPdControl 	= GPIO_PIN_PU;
+
+	GPIO_Init(&onBoardBtnInt);
+}
+
+/*******************************************************************************/
 
 void BlinkOnBoardLed(void)
 {
@@ -94,5 +114,19 @@ void BlinkOBLedWithButton(void)
 			GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
 		}
 	}
+
+}
+
+void InterruptToggleLED(void)
+{
+	/*
+	 * Initializing GPIO Driver for On Board Button and LED
+	 */
+	GpioInitOnBoardBtnInt();
+	GpioInitOnBoardLed();
+
+	//IRQ Configuration
+	GPIO_IRQPriorityConfig(IRQ_NO_EXTI15_10, 1);
+	GPIO_IRQInterruptConfig(IRQ_NO_EXTI15_10, ENABLE);
 
 }

@@ -25,6 +25,7 @@
 #include <onboard_led.h>
 #include <stm32f446re.h>
 #include <stm32f446re_gpio_driver.h>
+#include <stm32f446re_spi_driver.h>
 
 int main(void)
 {
@@ -37,5 +38,16 @@ int main(void)
 		BlinkOBLedWithButton();
 #endif
 
+#ifdef INTERRUPT_LED_BUTTON
+		InterruptToggleLED();
+#endif
 
+}
+
+void EXTI15_10_IRQHandler(void)
+{
+	GPIO_IRQHandler(GPIO_PIN_13);
+
+	//Toggle LED
+	GPIO_ToggleOutputPin(GPIOC, GPIO_PIN_5);
 }

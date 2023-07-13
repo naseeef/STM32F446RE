@@ -169,7 +169,7 @@ void GPIO_Init(Gpio_Handle_t *pGPIOHandle)
 
 
 		/*Enable EXTI Interrupt Delivery using IMR*/
-		EXTI->IMR |= (1 << pGPIOHandle->Gpio_PinConfig.GPIO_PinNumber);
+		EXTI->IMR |= 1 << pGPIOHandle->Gpio_PinConfig.GPIO_PinNumber;
 
 	}
 	temp = 0;
@@ -394,7 +394,64 @@ void GPIO_ToggleOutputPin(Gpio_Reg_t *pGPIOx, uint8_t PinNumber)
  * @Note		- 
  *
  */
-void GPIO_IRQConfig(uint8_t IRQNumber, uint8_t IRQPriority, uint8_t ENorDI);
+void GPIO_IRQInterruptConfig(uint8_t IRQNumber, uint8_t ENorDI)
+{
+	if (ENorDI == ENABLE)
+	{
+		if(IRQNumber <= 31)
+		{
+			*NVIC_ISER0 |= ( 1 << IRQNumber );
+		}
+		else if(IRQNumber > 31 && IRQNumber <= 64)
+		{
+			*NVIC_ISER1 |= ( 1 << (IRQNumber % 32));
+		}
+		else if(IRQNumber >= 64 && IRQNumber <= 96)
+		{
+			*NVIC_ISER2 |= ( 1 << (IRQNumber % 64));
+		}
+	}
+	else if (ENorDI == DISABLE)
+	{
+		if(IRQNumber <= 31)
+		{
+			*NVIC_ICER0 |= ( 1 << IRQNumber );
+		}
+		else if(IRQNumber > 31 && IRQNumber <= 64)
+		{
+			*NVIC_ICER1 |= ( 1 << (IRQNumber % 32));
+		}
+		else if(IRQNumber >= 64 && IRQNumber <= 96)
+		{
+			*NVIC_ICER2 |= ( 1 << (IRQNumber % 64));
+		}
+	}
+}
+
+/**********************************************************************************
+ * @fn			-
+ *
+ * @brief		-
+ *
+ * @param[]		-
+ * @param[]		-
+ *
+ * @return		-
+ *
+ * @Note		-
+ *
+ */
+void GPIO_IRQPriorityConfig(uint8_t IRQNumber, uint8_t IRQPriority)
+{
+	uint8_t iprx = IRQNumber / 4;
+	uint8_t iprx_section = IRQNumber % 4;
+
+	uint8_t shift_amount = (8* iprx_section) + (8 - NO_PR_BITSIMPLENETED);
+
+	*(NVIC_PR_BASE_ADDR + (iprx) ) |= (IRQPriority << shift_amount );
+}
+
+
 /**********************************************************************************
  * @fn			- 
  *
@@ -408,4 +465,11 @@ void GPIO_IRQConfig(uint8_t IRQNumber, uint8_t IRQPriority, uint8_t ENorDI);
  * @Note		- 
  *
  */
-void GPIO_IRQHandler(uint8_t pinNumber);
+void GPIO_IRQHandler(uint8_t pinNumber)
+{
+	if(EXTI->PR & (1 << pinNumber))
+	{
+		EXTI->PR |= (1 << pinNumber);
+	}
+
+}
