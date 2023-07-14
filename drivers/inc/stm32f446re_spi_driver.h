@@ -75,9 +75,18 @@ typedef struct{
 #define SPI_SSM_EN				1
 #define SPI_SSM_DI				0
 
-
+/*
+ * SPI SR (Status Registers) Flags
+ */
+#define SPI_TXE_FLAG			( 1 << SPI_SR_TXE )
+#define SPI_RXNE_FLAG			( 1 << SPI_SR_RXNE )
+#define SPI_BSY_FLAG			( 1 << SPI_SR_BSY )
 
 void SPIPeripheralClockControl(spi_reg_t *pSPIx, uint8_t ENorDI);
 void SPIInit(spi_handle_t *pSPIHandle);
+void SPISendData(spi_reg_t *pSPIx, uint8_t *pTxBuffer, uint8_t len);
+uint8_t SPIGetFlagStatus(spi_reg_t *pSPIx, uint32_t flagName);
+void SPIPeripheralControl(spi_reg_t *pSPIx, uint8_t ENorDI);
+
 
 #endif /* INC_STM32F446RE_SPI_DRIVER_H_ */

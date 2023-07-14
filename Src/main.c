@@ -22,10 +22,12 @@
 #include <stdint.h>
 
 #include <appconfig.h>
-#include <onboard_led.h>
 #include <stm32f446re.h>
 #include <stm32f446re_gpio_driver.h>
 #include <stm32f446re_spi_driver.h>
+
+#include <onboard_led.h>
+#include <spi_tests.h>
 
 int main(void)
 {
@@ -41,6 +43,11 @@ int main(void)
 #ifdef INTERRUPT_LED_BUTTON
 		InterruptToggleLED();
 #endif
+
+#ifdef SPI_SEND_DATA
+		TestSPISendData();
+#endif
+
 
 }
 
