@@ -113,7 +113,10 @@ void SPIInit(spi_handle_t *pSPIHandle)
 	temp |= pSPIHandle->spiConfig.spiCPHA << SPI_CR1_CPHA;
 
 	/*Setting Software Slave Management*/
-	/*temp |= pSPIHandle->spiConfig.spiSSM << SPI_CR1_SSM;*/
+	temp |= pSPIHandle->spiConfig.spiSSM << SPI_CR1_SSM;
+
+	/*Setting SSI, to avoid MODF Error*/
+	temp |= pSPIHandle->spiConfig.spiSSI << SPI_CR1_SSI;
 
 	pSPIHandle->pSPIx->CR1 = temp;
 }
@@ -140,6 +143,31 @@ void SPIPeripheralControl(spi_reg_t *pSPIx, uint8_t ENorDI)
 	else
 	{
 		pSPIx->CR1 &= ~( 1 << SPI_CR1_SPE );
+	}
+}
+
+/**********************************************************************************
+ * @fn			- SPIPeripheralControl(spi_reg_t *pSPIx, uint8_t ENorDI)
+ *
+ * @brief		- SPI Peripheral enable or disable
+ *
+ * @param[]		- SPI Port
+ * @param[]		- Enable/Disable
+ *
+ * @return		-
+ *
+ * @Note		- to prevent MODF error
+ *
+ */
+void SPISSIConfig(spi_reg_t *pSPIx, uint8_t ENorDI)
+{
+	if(ENorDI == ENABLE)
+	{
+		pSPIx->CR1 |= ( 1 << SPI_CR1_SSI );
+	}
+	else
+	{
+		pSPIx->CR1 &= ~( 1 << SPI_CR1_SSI );
 	}
 }
 

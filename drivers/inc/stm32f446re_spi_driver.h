@@ -19,6 +19,7 @@ typedef struct{
 	uint8_t spiCPOL;
 	uint8_t spiCPHA;
 	uint8_t spiSSM;
+	uint8_t spiSSI;
 }spi_config_t;
 
 typedef struct{
@@ -76,6 +77,12 @@ typedef struct{
 #define SPI_SSM_DI				0
 
 /*
+ * SSI - Software Slave Management
+ */
+#define SPI_SSI_EN				1
+#define SPI_SSI_DI				0
+
+/*
  * SPI SR (Status Registers) Flags
  */
 #define SPI_TXE_FLAG			( 1 << SPI_SR_TXE )
@@ -87,6 +94,7 @@ void SPIInit(spi_handle_t *pSPIHandle);
 void SPISendData(spi_reg_t *pSPIx, uint8_t *pTxBuffer, uint8_t len);
 uint8_t SPIGetFlagStatus(spi_reg_t *pSPIx, uint32_t flagName);
 void SPIPeripheralControl(spi_reg_t *pSPIx, uint8_t ENorDI);
+void SPISSIConfig(spi_reg_t *pSPIx, uint8_t ENorDI);
 
 
 #endif /* INC_STM32F446RE_SPI_DRIVER_H_ */
