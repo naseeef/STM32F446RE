@@ -201,7 +201,7 @@ void GPIO_Init(Gpio_Handle_t *pGPIOHandle)
 	/*
 	 * Configuring Alternate Function
 	 */
-	if(pGPIOHandle-> Gpio_PinConfig.GPIO_PinMode == pGPIOHandle->Gpio_PinConfig.GPIO_AltFnMode)
+	if(pGPIOHandle-> Gpio_PinConfig.GPIO_PinMode == /*pGPIOHandle->Gpio_PinConfig.GPIO_AltFnMode*/GPIO_MODE_ALTFN)
 	{
 		/*ALTFN Register Selection*/
 		ALTFNReg = (pGPIOHandle->Gpio_PinConfig.GPIO_PinNumber/8);
