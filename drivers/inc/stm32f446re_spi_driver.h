@@ -97,5 +97,7 @@ void SPIPeripheralControl(spi_reg_t *pSPIx, uint8_t ENorDI);
 void SPISSIConfig(spi_reg_t *pSPIx, uint8_t ENorDI);
 void SPISSOEConfig(spi_reg_t *pSPIx, uint8_t ENorDI);
 
+void SPIReceiveData(spi_reg_t *pSPIx, uint8_t *pTxBuffer, uint8_t len);
+
 
 #endif /* INC_STM32F446RE_SPI_DRIVER_H_ */

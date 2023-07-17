@@ -276,6 +276,53 @@ void SPISendData(spi_reg_t *pSPIx, uint8_t *pTxBuffer, uint8_t len)
 	}
 }
 
+/**********************************************************************************
+ * @fn			- SPIReceiveData(spi_reg_t *pSPIx, uint8_t *pTxBuffer, uint8_t len)
+ *
+ * @brief		- SPI Send data through a SPI port
+ *
+ * @param[]		- SPI Port
+ * @param[]		- Receiver Buffer - Data
+ * @param[]		- len of data
+ * 
+ * @return		-
+ *
+ * @Note		- THIS IS A BLOCKING FUNCTION CALL (POLLING TYPE)
+ *
+ */
+void SPIReceiveData(spi_reg_t *pSPIx, uint8_t *pRxBuffer, uint8_t len)
+{
+	while(len>0)
+	{
+		/*Wait until SPI SR RXNE flag is empty*/
+		while(SPIGetFlagStatus(pSPIx, SPI_RXNE_FLAG) == FLAG_RESET);
+
+		/*Check the Data Frame Format in SPI_CR1*/
+		if((pSPIx->CR1 & ( 1<< SPI_CR1_DFF)))
+		{
+			//16 Bit DFF
+
+			/*Load the SPI DR (Data register) to RxBuffer*/
+			/*typecaste into uint16_t becuase we getting 8 bit data*/
+			*((uint16_t*)pRxBuffer) = pSPIx->DR; 
+			len--;
+			len--;
+			/*increment*/
+			(uint16_t*)pRxBuffer++;
+		}
+		else
+		{
+			//8 Bit DFF
+
+			/*Load the SPI DR (Data register) to RxBuffer*/
+			*pRxBuffer = pSPIx->DR; //Becuase we getting 8 bit data
+			len--;
+			/*increment*/
+			pRxBuffer++;
+		}
+	}
+}
+
 uint8_t SPIGetFlagStatus(spi_reg_t *pSPIx, uint32_t flagName)
 {
 	if(pSPIx->SR & flagName)

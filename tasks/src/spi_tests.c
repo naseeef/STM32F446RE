@@ -85,6 +85,61 @@ void TestSPISendDataToArduino()
 
 }
 
+void TestSPIMasterSlave()
+{
+    /*Declare data to transmit*/
+    uint8_t txData = 0xA5;
+    uint8_t dummyWrite = 0xFF;
+    uint8_t dummyCode;
+    uint8_t rxData;
+    uint8_t args[2] = {0x09,0x01};
+
+    /*Initialize GPIO Pins as SPI in Alternate Function Mode*/
+    InitGpioPins();
+    GpioInitOnBoardBtn();
+
+    /*Initialize SPI*/
+    InitSpiForArduinoComm();
+
+    while (1)
+    {
+        /*Wait until button press*/
+        while(!GPIO_ReadPin(GPIOC, GPIO_PIN_13));
+
+        /*Enable SPI Peripheral*/
+        SPIPeripheralControl(SPI2, ENABLE);
+
+        /*Config SSOE in SPI CR2 for hardware slave management*/
+        SPISSOEConfig(SPI2, ENABLE);
+
+        /*Send command to Slave*/
+        SPISendData(SPI2, &txData, 1);
+        /*Read dummy data from slave inorder to clear RXNE*/
+        SPIReceiveData(SPI2, &dummyCode, 1);
+        /*Send 1Byte of Dummy data to slave inorder to push the data from shift register*/
+        SPISendData(SPI2, &dummyWrite, 1);
+        /*Receive data from slave*/
+        SPIReceiveData(SPI2, &rxData, 1);
+
+        if(rxData == 0xF5)
+        {
+            //printf("Slave Verified");
+            SPISendData(SPI2, args, 2);
+        }
+        else
+        {
+            //printf("ERRORRRRRRRR");
+        }
+
+        /*Wait before disabling SPI, check whether it's busy or not*/
+        while(! SPIGetFlagStatus(SPI2, SPI_SR_BSY));
+
+        /*Disable SPI Peripheral after data transmit*/
+        SPIPeripheralControl(SPI2, DISABLE);
+    }
+
+}
+
 static void InitGpioPins(void)
 {
     Gpio_Handle_t spiTestPins;

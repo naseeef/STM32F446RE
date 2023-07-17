@@ -11,5 +11,6 @@
 
 void TestSPISendData(void);
 void TestSPISendDataToArduino(void);
+void TestSPIMasterSlave(void);
 
 #endif /* INC_SPI_TESTS_H_ */
