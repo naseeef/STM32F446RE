@@ -147,7 +147,7 @@ void SPIPeripheralControl(spi_reg_t *pSPIx, uint8_t ENorDI)
 }
 
 /**********************************************************************************
- * @fn			- SPIPeripheralControl(spi_reg_t *pSPIx, uint8_t ENorDI)
+ * @fn			- SPISSIConfig(spi_reg_t *pSPIx, uint8_t ENorDI)
  *
  * @brief		- SPI Peripheral enable or disable
  *
@@ -168,6 +168,31 @@ void SPISSIConfig(spi_reg_t *pSPIx, uint8_t ENorDI)
 	else
 	{
 		pSPIx->CR1 &= ~( 1 << SPI_CR1_SSI );
+	}
+}
+
+/**********************************************************************************
+ * @fn			- SPISSOEConfig(spi_reg_t *pSPIx, uint8_t ENorDI)
+ *
+ * @brief		- SPI Peripheral enable or disable
+ *
+ * @param[]		- SPI Port
+ * @param[]		- Enable/Disable
+ *
+ * @return		-
+ *
+ * @Note		- for Hardware management SSOE configuration
+ *
+ */
+void SPISSOEConfig(spi_reg_t *pSPIx, uint8_t ENorDI)
+{
+	if(ENorDI == ENABLE)
+	{
+		pSPIx->CR2 |= ( 1 << SPI_CR2_SSOE );
+	}
+	else
+	{
+		pSPIx->CR2 &= ~( 1 << SPI_CR2_SSOE );
 	}
 }
 

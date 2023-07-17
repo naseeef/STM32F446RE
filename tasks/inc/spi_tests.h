@@ -9,6 +9,7 @@
 #define INC_SPI_TESTS_H_
 
 
-void TestSPISendData();
+void TestSPISendData(void);
+void TestSPISendDataToArduino(void);
 
 #endif /* INC_SPI_TESTS_H_ */
