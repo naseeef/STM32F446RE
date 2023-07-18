@@ -12,5 +12,6 @@
 void TestSPISendData(void);
 void TestSPISendDataToArduino(void);
 void TestSPIMasterSlave(void);
+void TestSPIReceiveOverInterrupt(void);
 
 #endif /* INC_SPI_TESTS_H_ */

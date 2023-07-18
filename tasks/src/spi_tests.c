@@ -18,6 +18,23 @@ static void InitGpioPins(void);
 static void InitSpi(void);
 static void InitSpiForArduinoComm(void);
 static void GpioInitOnBoardBtn(void);
+static void InitGpioInterruptPin(void);
+
+#ifndef SPI_INT_ARDUINO_SLAVE_TEST
+	spi_handle_t spiTest;
+
+	#define MAX_LEN 500
+
+	char RcvBuff[MAX_LEN];
+
+	__vo char ReadByte;
+
+
+	__vo uint8_t rcvStop = 0;
+
+	/*This flag will be set in the interrupt handler of the Arduino interrupt GPIO */
+	__vo uint8_t dataAvailable = 0;
+#endif
 
 void TestSPISendData()
 {
@@ -140,6 +157,59 @@ void TestSPIMasterSlave()
 
 }
 
+
+void TestSPIReceiveOverInterrupt(void)
+{
+    uint8_t dummy = 0xff;
+
+    InitGpioPins();
+    InitGpioInterruptPin();
+    InitSpi();
+
+    /*Enable SPI Peripheral*/
+    SPIPeripheralControl(SPI2, ENABLE);
+
+    /*Config SSOE in SPI CR2 for hardware slave management*/
+    SPISSOEConfig(SPI2, ENABLE);
+
+    SPIIRQInterruptConfig(IRQ_NO_SPI2, ENABLE);
+
+    while(1)
+    {
+		rcvStop = 0;
+
+		while(!dataAvailable); //wait till data available interrupt from transmitter device(slave)
+
+		GPIO_IRQInterruptConfig(IRQ_NO_EXTI9_5,DISABLE);
+
+		//enable the SPI2 peripheral
+		SPIPeripheralControl(SPI2,ENABLE);
+
+
+		while(!rcvStop)
+		{
+			/* fetch the data from the SPI peripheral byte by byte in interrupt mode */
+			while ( SPISendDataInterrupt(&spiTest,&dummy,1) == SPI_BUSY_IN_TX);
+			while ( SPIReceiveDataInterrupt(&spiTest,&ReadByte,1) == SPI_BUSY_IN_RX );
+		}
+
+
+		// confirm SPI is not busy
+		while( SPIGetFlagStatus(SPI2, SPI_BSY_FLAG) );
+
+		//Disable the SPI2 peripheral
+		SPIPeripheralControl(SPI2,DISABLE);
+
+		printf("Rcvd data = %s\n",RcvBuff);
+
+		dataAvailable = 0;
+
+		GPIO_IRQInterruptConfig(IRQ_NO_EXTI9_5,ENABLE);
+	}
+    
+    //return 0;
+}
+
 static void InitGpioPins(void)
 {
     Gpio_Handle_t spiTestPins;
@@ -218,4 +288,55 @@ static void InitSpiForArduinoComm(void)
     spiTestArduino.spiConfig.spiSSI = SPI_SSI_DI;
 
     SPIInit(&spiTestArduino);
+}
+
+static void InitGpioInterruptPin(void)
+{
+	Gpio_Handle_t spiInterruptPin;
+	memset(&spiInterruptPin,0,sizeof(spiInterruptPin));
+
+	spiInterruptPin.pGPIOx = GPIOD;
+
+	spiInterruptPin.Gpio_PinConfig.GPIO_PinNumber 	= GPIO_PIN_6;
+	spiInterruptPin.Gpio_PinConfig.GPIO_PinMode 		= GPIO_MODE_INT_FT;
+	spiInterruptPin.Gpio_PinConfig.GPIO_PinSpeed 	= GPIO_SPEED_LOW;
+	spiInterruptPin.Gpio_PinConfig.GPIO_PuPdControl 	= GPIO_PIN_PU;
+
+	GPIO_Init(&spiInterruptPin);
+
+    GPIO_IRQInterruptConfig(IRQ_NO_EXTI9_5, ENABLE);
+    GPIO_IRQPriorityConfig(IRQ_NO_EXTI9_5, NVIC_IRQ_PRI15);
+}
+
+
+/* Runs when a data byte is received from the peripheral over SPI*/
+void SPI2IRQHandler(void)
+{
+
+	SPIIRQHandling(&spiTest);
+}
+
+
+
+void SPIApplicationEventCB(spi_handle_t *pSPIHandle,uint8_t AppEv)
+{
+	static uint32_t i = 0;
+	/* In the RX complete event , copy data in to rcv buffer . '\0' indicates end of message(rcvStop = 1) */
+	if(AppEv == SPI_EVENT_RX_CMPLT)
+	{
+				RcvBuff[i++] = ReadByte;
+				if(ReadByte == '\0' || ( i == MAX_LEN)){
+					rcvStop = 1;
+					RcvBuff[i-1] = '\0';
+					i = 0;
+				}
+	}
+
+}
+
+/* Slave data available interrupt handler */
+void EXTI9_5_IRQHandler(void)
+{
+	GPIO_IRQHandler(GPIO_PIN_6);
+	dataAvailable = 1;
 }

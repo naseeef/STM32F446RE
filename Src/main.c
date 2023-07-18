@@ -48,6 +48,17 @@ int main(void)
 		TestSPISendData();
 #endif
 
+#ifdef SPI_SEND_DATA_ARDUINO
+		TestSPISendDataToArduino();
+#endif
+
+#ifdef SPI_MASTER_SLAVE_FD
+		TestSPIMasterSlave();
+#endif
+
+#ifdef SPI_INT_ARDUINO_SLAVE_TEST
+		TestSPIReceiveOverInterrupt();
+#endif
 
 }
 

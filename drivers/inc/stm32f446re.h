@@ -9,9 +9,10 @@
 #define INC_STM32F446RE_H_
 
 #include <stdint.h>
+#include <stddef.h>
 
 #define __vo 				volatile
-
+#define __weak				__attribute__((weak))
 
 //General Macros
 #define ENABLE				1
@@ -335,6 +336,16 @@ typedef struct
 #define IRQ_NO_EXTI4		10
 #define IRQ_NO_EXTI9_5		23
 #define IRQ_NO_EXTI15_10	40
+#define IRQ_NO_SPI1			35
+#define IRQ_NO_SPI2         36
+#define IRQ_NO_SPI3         51
+
+/*
+ * macros for all the possible priority levels
+ */
+#define NVIC_IRQ_PRI0    	0
+#define NVIC_IRQ_PRI15    	15
+
 
 /*
  * BIT Position Macros of SPI Peripharels
@@ -362,7 +373,7 @@ typedef struct
 #define SPI_CR2_FRF			4
 #define SPI_CR2_ERRIE		5
 #define SPI_CR2_RXNEIE		6
-#define SPI_CR2_TXIEI		7
+#define SPI_CR2_TXEIE		7
 /*SPI_SR*/
 #define SPI_SR_RXNE			0
 #define SPI_SR_TXE			1
